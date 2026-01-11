@@ -1,0 +1,169 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace CarRentalManagement
+{
+    public partial class Car : Form
+    {
+        public Car()
+        {
+            InitializeComponent();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            SqlConnection con = new SqlConnection(@"Data Source=localhost;Initial Catalog=CarDB;Integrated Security=True;TrustServerCertificate=True");
+            con.Open();
+            SqlCommand cnn = new SqlCommand("insert into cars values(@carid,@carname,@model,@platenumber,@color,@dailyrate,@status)", con);
+            cnn.Parameters.AddWithValue("@carid", int.Parse(textBox1.Text));
+            cnn.Parameters.AddWithValue("@carname", textBox2.Text);
+            cnn.Parameters.AddWithValue("@model", textBox3.Text);
+            cnn.Parameters.AddWithValue("@platenumber", textBox4.Text);
+            cnn.Parameters.AddWithValue("@color", textBox5.Text);
+            cnn.Parameters.AddWithValue("@dailyrate", int.Parse(textBox6.Text));
+            cnn.Parameters.AddWithValue("@status", textBox7.Text);
+            cnn.ExecuteNonQuery();
+            con.Close();
+            MessageBox.Show("Record Saved Successfully");
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            SqlConnection con = new SqlConnection(@"Data Source=localhost;Initial Catalog=CarDB;Integrated Security=True;TrustServerCertificate=True");
+            con.Open();
+            SqlCommand cnn = new SqlCommand("select * from cars", con);
+            SqlDataAdapter da = new SqlDataAdapter(cnn);
+            DataTable table = new DataTable();
+            da.Fill(table);
+            dataGridView1.DataSource = table;
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            SqlConnection con = new SqlConnection(@"Data Source=localhost;Initial Catalog=CarDB;Integrated Security=True;TrustServerCertificate=True");
+            con.Open();
+            SqlCommand cnn = new SqlCommand("update cars set carname=@carname,model=@model,platenumber=@platenumber,color=@color,dailyrate=@dailyrate,status=@status where carid=@carid", con);
+            cnn.Parameters.AddWithValue("@carid", int.Parse(textBox1.Text));
+            cnn.Parameters.AddWithValue("@carname", textBox2.Text);
+            cnn.Parameters.AddWithValue("@model", textBox3.Text);
+            cnn.Parameters.AddWithValue("@platenumber", textBox4.Text);
+            cnn.Parameters.AddWithValue("@color", textBox5.Text);
+            cnn.Parameters.AddWithValue("@dailyrate", int.Parse(textBox6.Text));
+            cnn.Parameters.AddWithValue("@status", textBox7.Text);
+            cnn.ExecuteNonQuery();
+            con.Close();
+            MessageBox.Show("Record Updated Successfully");
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            SqlConnection con = new SqlConnection(@"Data Source=localhost;Initial Catalog=CarDB;Integrated Security=True;TrustServerCertificate=True");
+            con.Open();
+            SqlCommand cnn = new SqlCommand("delete from cars where carid=@carid", con);
+            cnn.Parameters.AddWithValue("@carid", int.Parse(textBox1.Text));
+            cnn.ExecuteNonQuery();
+            con.Close();
+            MessageBox.Show("Record Deleted Successfully");
+        }
+
+        private void Car_Load(object sender, EventArgs e)
+        {
+            SqlConnection con = new SqlConnection(@"Data Source=localhost;Initial Catalog=CarDB;Integrated Security=True;TrustServerCertificate=True");
+            con.Open();
+            SqlCommand cnn = new SqlCommand("select * from cars", con);
+            SqlDataAdapter da = new SqlDataAdapter(cnn);
+            DataTable table = new DataTable();
+            da.Fill(table);
+            dataGridView1.DataSource = table;
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            textBox1.Text = "";
+            textBox2.Text = "";
+            textBox3.Text = "";
+            textBox4.Text = "";
+            textBox5.Text = "";
+            textBox6.Text = "";
+            textBox7.Text = "";
+        }
+    }
+}
+
+
+
+
+
+
+   Dashboard Code
+
+    public Dashboard()
+{
+    InitializeComponent();
+}
+
+private void Dashboard_Load(object sender, EventArgs e)
+{
+    display1();
+    display2();
+    display3();
+}
+
+private void display1()
+{
+    SqlConnection con = new SqlConnection(@"Data Source=localhost;Initial Catalog=CarDB;Integrated Security=True;TrustServerCertificate=True");
+    con.Open();
+    SqlCommand comm = new SqlCommand("SELECT COUNT(*) FROM customers", con);
+    Int32 count = Convert.ToInt32(comm.ExecuteScalar());
+    if (count > 0)
+    {
+        lblCount1.Text = Convert.ToString(count.ToString());
+    }
+    else
+    {
+        lblCount1.Text = "";
+    }
+    con.Close();
+}
+
+private void display2()
+{
+    SqlConnection con = new SqlConnection(@"Data Source=localhost;Initial Catalog=CarDB;Integrated Security=True;TrustServerCertificate=True");
+    con.Open();
+    SqlCommand comm = new SqlCommand("SELECT COUNT(*) FROM cars", con);
+    Int32 count = Convert.ToInt32(comm.ExecuteScalar());
+    if (count > 0)
+    {
+        lblCount2.Text = Convert.ToString(count.ToString());
+    }
+    else
+    {
+        lblCount2.Text = "";
+    }
+    con.Close();
+}
+
+private void display3()
+{
+    SqlConnection con = new SqlConnection(@"Data Source=localhost;Initial Catalog=CarDB;Integrated Security=True;TrustServerCertificate=True");
+    con.Open();
+    SqlCommand comm = new SqlCommand("SELECT COUNT(*) FROM categories", con);
+    Int32 count = Convert.ToInt32(comm.ExecuteScalar());
+    if (count > 0)
+    {
+        lblCount3.Text = Convert.ToString(count.ToString());
+    }
+    else
+    {
+        lblCount3.Text = "";
+    }
+    con.Close();
+}
